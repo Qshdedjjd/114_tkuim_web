@@ -29,7 +29,7 @@ switch (choice) {
     msg += '\n非 1/2/3';
 }
 
-// ✅ 新增：輸入分數並輸出等第
+//  新增：輸入分數並輸出等第
 var scoreInput = prompt('請輸入你的分數（0–100）：');
 var score = parseFloat(scoreInput);
 var grade = '';

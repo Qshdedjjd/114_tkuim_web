@@ -19,18 +19,18 @@ lines += 'notAssigned = ' + notAssigned + '，typeof: ' + (typeof notAssigned) +
 var textToNumber = parseInt(text, 10); // 將 '123' → 123
 lines += 'parseInt(\'123\') = ' + textToNumber + '\n';
 lines += 'String(45) = ' + String(num) + '\n';
-// ✅ 使用 prompt() 讀入兩個數字字串
+//  使用 prompt() 讀入兩個數字字串
 var input1 = prompt('請輸入第一個數字：');
 var input2 = prompt('請輸入第二個數字：');
 
-// ✅ 將字串轉為數字
+//  將字串轉為數字
 var num1 = Number(input1);
 var num2 = Number(input2);
 
-// ✅ 相加
+//  相加
 var sum = num1 + num2;
 
-// ✅ 輸出結果
+//  輸出結果
 lines += '輸入的第一個數字：' + num1 + '\n';
 lines += '輸入的第二個數字：' + num2 + '\n';
 lines += '相加結果：' + sum + '\n';

@@ -12,10 +12,10 @@ var el = document.getElementById('result');
 el.textContent = '這行文字是由外部 JS 檔案寫入的。';
 // 增加一行你的姓名跟學號
 el.textContent += '\n412630278 丁琇緻';
-// ✅ 取得按鈕元素
+// 取得按鈕元素
 var btn = document.getElementById('showMsgBtn');
 
-// ✅ 設定按鈕點擊事件
+// 設定按鈕點擊事件
 btn.onclick = function() {
   alert('你剛剛按下了按鈕！');
 };

@@ -8,21 +8,41 @@ document.addEventListener("DOMContentLoaded", () => {
   const strengthText = document.getElementById("strengthText");
   const passwordInput = document.getElementById("password");
   const confirmInput = document.getElementById("confirmPassword");
+  const terms = document.getElementById("terms");
 
-  // === localStorage 恢復 ===
+  // === localStorage 恢復 + blur 驗證 ===
   inputs.forEach((input) => {
     const saved = localStorage.getItem(input.id);
     if (saved) input.value = saved;
+
     input.addEventListener("input", () => {
       localStorage.setItem(input.id, input.value);
     });
+
+    // ✅ blur 後顯示錯誤訊息
+    input.addEventListener("blur", () => validateField(input));
   });
 
-  // === 興趣標籤 ===
+  // === 儲存與恢復興趣選項 ===
   interestField.addEventListener("change", () => {
+    const selected = [...interestField.querySelectorAll("input:checked")].map(i => i.value);
+    localStorage.setItem("interests", JSON.stringify(selected));
+
     const checked = interestField.querySelectorAll("input:checked");
     const error = document.getElementById("interestError");
     error.textContent = checked.length === 0 ? "請至少選擇一項興趣" : "";
+  });
+
+  const savedInterests = JSON.parse(localStorage.getItem("interests") || "[]");
+  interestField.querySelectorAll("input").forEach(i => {
+    i.checked = savedInterests.includes(i.value);
+  });
+
+  // === 儲存與恢復服務條款勾選 ===
+  const savedTerms = localStorage.getItem("termsChecked") === "true";
+  terms.checked = savedTerms;
+  terms.addEventListener("change", (e) => {
+    localStorage.setItem("termsChecked", e.target.checked);
   });
 
   // === 密碼強度條 ===
@@ -53,8 +73,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   confirmInput.addEventListener("input", () => validateField(confirmInput));
 
+  // === 驗證欄位 ===
   function validateField(field) {
     const errorMsg = document.getElementById(field.id + "Error");
+    if (!errorMsg) return;
     let message = "";
 
     if (field.validity.valueMissing) {
@@ -72,6 +94,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    // ✅ 使用 Constraint Validation API
+    field.setCustomValidity(message);
     errorMsg.textContent = message;
   }
 
@@ -85,20 +109,37 @@ document.addEventListener("DOMContentLoaded", () => {
     const interestError = document.getElementById("interestError");
     if (interestsChecked.length === 0) {
       interestError.textContent = "請至少選擇一項興趣";
-      return;
     } else {
       interestError.textContent = "";
     }
 
     // 驗證所有欄位
     let invalid = false;
+    let firstInvalid = null;
+
     inputs.forEach((input) => {
       validateField(input);
       const err = document.getElementById(input.id + "Error");
-      if (err && err.textContent !== "") invalid = true;
+      if (err && err.textContent !== "") {
+        invalid = true;
+        if (!firstInvalid) firstInvalid = input; // ✅ 聚焦第一個錯誤
+      }
     });
 
-    if (invalid) return; // 有錯誤就不送出
+    // 驗證服務條款
+    const termsError = document.getElementById("termsError");
+    if (!terms.checked) {
+      termsError.textContent = "必須同意服務條款";
+      invalid = true;
+      if (!firstInvalid) firstInvalid = terms;
+    } else {
+      termsError.textContent = "";
+    }
+
+    if (invalid) {
+      if (firstInvalid) firstInvalid.focus();
+      return; // 有錯誤就不送出
+    }
 
     // === 模擬送出 ===
     submitBtn.disabled = true;

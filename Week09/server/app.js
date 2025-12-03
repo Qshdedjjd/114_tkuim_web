@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import { signupRouter } from './routes/signup.js';
 
+
+
 dotenv.config(); // 載入 .env 變數
 
 const app = express();

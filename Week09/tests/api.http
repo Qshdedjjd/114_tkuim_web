@@ -1,0 +1,24 @@
+# tests/api.http
+
+### 測試 1: 成功報名 (POST /api/signup)
+POST http://localhost:3001/api/signup
+Content-Type: application/json
+
+{
+    "name": "王小明",
+    "email": "ming@example.com",
+    "phone": "0912345678"
+}
+
+### 測試 2: 欄位驗證失敗 (POST /api/signup)
+# 缺少 name 欄位
+POST http://localhost:3001/api/signup
+Content-Type: application/json
+
+{
+    "email": "fail@example.com",
+    "phone": "0998765432"
+}
+
+### 測試 3: 查看報名清單 (GET /api/signup)
+GET http://localhost:3001/api/signup

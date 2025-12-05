@@ -8,13 +8,20 @@ Content-Type: application/json
   "phone": "0911222333"
 }
 
+###
+//  關鍵修正：當 POST 成功後，立即將回傳的 _id 賦值給變數 🌟
+@last_id = json.$._id
+
 ### 取得清單
 GET http://localhost:3001/api/signup
 
 ### 更新
-PATCH http://localhost:3001/api/signup/6930350a8a43e4c709e965a2
+PATCH http://localhost:3001/api/signup/{{last_id}}
 Content-Type: application/json
 
 {
   "phone": "0911000111"
 }
+
+### 刪除
+DELETE http://localhost:3001/api/signup/{{last_id}}

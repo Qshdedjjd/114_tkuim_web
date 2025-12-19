@@ -9,13 +9,14 @@ Content-Type: application/json
 }
 
 ### 取得 POST 回傳的 ID
-@last_id = {{response.body | json | select("id")}}
+
+
 
 ### 取得報名清單
 GET http://localhost:3001/api/signup
 
 ### 更新電話號碼
-PATCH http://localhost:3001/api/signup/{{last_id}}
+//PATCH http://localhost:3001/api/signup/{{last_id}}
 Content-Type: application/json
 
 {
@@ -23,4 +24,4 @@ Content-Type: application/json
 }
 
 ### 刪除該筆報名
-DELETE http://localhost:3001/api/signup/{{last_id}}
+//DELETE http://localhost:3001/api/signup/{{last_id}}

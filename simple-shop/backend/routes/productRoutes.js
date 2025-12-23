@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const productController = require("../controllers/productController");
+const auth = require("../middleware/auth"); // 引入警衛
 
-router.post("/", productController.createProduct);
+// 公開路由：大家都能看商品
 router.get("/", productController.getProducts);
-router.get("/:id", productController.getProductById);
-router.put("/:id", productController.updateProduct);
-router.delete("/:id", productController.deleteProduct);
+
+// 受保護路由：必須經過 auth 警衛檢查
+router.post("/", auth, productController.createProduct); 
+router.put("/:id", auth, productController.updateProduct);
+router.delete("/:id", auth, productController.deleteProduct);
 
 module.exports = router;

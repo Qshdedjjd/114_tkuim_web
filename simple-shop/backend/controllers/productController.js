@@ -1,100 +1,50 @@
-const Product = require("../models/Product");
+// backend/controllers/productController.js
+const productService = require("../services/productService"); // 引入 Service
 
-// Create
-exports.createProduct = async (req, res) => {
-  try {
-    console.log("後端接到資料了！內容是:", req.body);
-    const newProduct = new Product(req.body);
-    const savedProduct = await newProduct.save();
-    res.status(201).json(savedProduct);
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message
-    });
-  }
-};
-
-// Read all
 exports.getProducts = async (req, res) => {
   try {
-    const products = await Product.find();
-    // 直接回傳陣列，前端的 res.data 才會是 [{}, {}]
-    res.json(products); 
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+    const products = await productService.getAllProducts();
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-// Read single
+exports.createProduct = async (req, res) => {
+  try {
+    const newProduct = await productService.createProduct(req.body);
+    res.status(201).json(newProduct);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
 exports.getProductById = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
-    if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: "Product not found"
-      });
-    }
-    res.status(200).json({
-      success: true,
-      data: product
-    });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: "Invalid ID"
-    });
+    const product = await productService.getProductById(req.params.id);
+    if (!product) return res.status(404).json({ message: "找不到商品" });
+    res.json(product);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-// Update
 exports.updateProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-
-    if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: "Product not found"
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      data: product,
-      message: "Product updated successfully"
-    });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message
-    });
+    const updatedProduct = await productService.updateProduct(req.params.id, req.body);
+    if (!updatedProduct) return res.status(404).json({ message: "找不到商品" });
+    res.json(updatedProduct);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 };
 
-// Delete
 exports.deleteProduct = async (req, res) => {
   try {
-    const product = await Product.findByIdAndDelete(req.params.id);
-    if (!product) {
-      return res.status(404).json({
-        success: false,
-        message: "Product not found"
-      });
-    }
-    res.status(200).json({
-      success: true,
-      message: "Product deleted successfully"
-    });
-  } catch (error) {
-    res.status(400).json({
-      success: false,
-      message: error.message
-    });
+    const deletedProduct = await productService.deleteProduct(req.params.id);
+    if (!deletedProduct) return res.status(404).json({ message: "找不到商品" });
+    res.json({ message: "商品已刪除" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };

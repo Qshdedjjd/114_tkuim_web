@@ -3,112 +3,120 @@ import axios from "axios";
 
 const API_URL = "http://localhost:5000/api/products";
 
+// ✅ Factory Pattern: 根據輸入的類型生產對應的 Alert 元件
+const AlertFactory = ({ type, message }) => {
+  const styles = {
+    success: { backgroundColor: "#d4edda", color: "#155724", border: "1px solid #c3e6cb" },
+    danger: { backgroundColor: "#f8d7da", color: "#721c24", border: "1px solid #f5c6cb" }
+  };
+
+  const currentStyle = styles[type] || styles.success;
+
+  return (
+    <div style={{ ...currentStyle, padding: "15px", marginBottom: "20px", borderRadius: "8px", textAlign: "center" }}>
+      {message}
+    </div>
+  );
+};
+
 function ProductManager() {
   const [products, setProducts] = useState([]);
   const [form, setForm] = useState({ name: "", description: "", price: "", stock: "" });
   const [editingId, setEditingId] = useState(null);
+  const [alert, setAlert] = useState({ show: false, message: "", type: "success" });
 
-  // 取得商品列表
+  // 取得所有商品 (公開)
   const fetchProducts = async () => {
     const res = await axios.get(API_URL);
     setProducts(res.data);
   };
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+  useEffect(() => { fetchProducts(); }, []);
 
-  // 表單改變
-  const handleChange = e => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value });
 
-  // 新增 / 更新
+  // 提交：新增或更新 (需 Token)
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const config = {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    };
+
     try {
       if (editingId) {
-        // 更新商品邏輯
-        await axios.put(`${API_URL}/${editingId}`, form);
-        console.log("更新成功");
-        setEditingId(null); // 清除編輯狀態
+        await axios.put(`${API_URL}/${editingId}`, form, config);
+        setAlert({ show: true, message: "✅ 商品更新成功！", type: "success" });
+        setEditingId(null);
       } else {
-        // 新增商品邏輯 (把原本報錯的 formData 改成 form)
-        const response = await axios.post(API_URL, form); 
-        console.log("新增成功:", response.data);
+        await axios.post(API_URL, form, config);
+        setAlert({ show: true, message: "✅ 商品新增成功！", type: "success" });
       }
-      
-      // 重置表單
       setForm({ name: "", description: "", price: "", stock: "" });
-      // 重新抓取清單
-      fetchProducts(); 
+      fetchProducts();
+      setTimeout(() => setAlert({ show: false, message: "", type: "success" }), 3000);
     } catch (err) {
-      console.error("操作失敗:", err);
-      alert("連線失敗，請檢查後端伺服器是否運行中");
+      const errorMsg = err.response?.data?.message || "操作失敗，請檢查權限";
+      setAlert({ show: true, message: errorMsg, type: "danger" });
     }
   };
 
-  // 編輯
-  const handleEdit = product => {
+  const handleEdit = (product) => {
     setEditingId(product._id);
-    setForm({
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      stock: product.stock
-    });
+    setForm({ name: product.name, description: product.description, price: product.price, stock: product.stock });
   };
 
-  // 刪除
-  const handleDelete = async id => {
-    await axios.delete(`${API_URL}/${id}`);
-    fetchProducts();
+  // 刪除 (需 Token)
+  const handleDelete = async (id) => {
+    if (window.confirm("確定要刪除嗎？")) {
+      const config = {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      };
+      try {
+        await axios.delete(`${API_URL}/${id}`, config);
+        fetchProducts();
+        setAlert({ show: true, message: "🗑️ 商品已成功刪除", type: "danger" });
+        setTimeout(() => setAlert({ show: false, message: "", type: "success" }), 3000);
+      } catch (err) {
+        setAlert({ show: true, message: "刪除失敗，請檢查權限", type: "danger" });
+      }
+    }
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>商品管理</h2>
-      <form onSubmit={handleSubmit}>
-        <input name="name" placeholder="名稱" value={form.name} onChange={handleChange} required />
+    <div className="container">
+      <h2>📦 商城管理系統</h2>
+      
+      {alert.show && <AlertFactory type={alert.type} message={alert.message} />}
+
+      <form onSubmit={handleSubmit} className="product-form">
+        <input name="name" placeholder="商品名稱" value={form.name} onChange={handleChange} required />
         <input name="description" placeholder="描述" value={form.description} onChange={handleChange} required />
         <input name="price" type="number" placeholder="價格" value={form.price} onChange={handleChange} required />
         <input name="stock" type="number" placeholder="庫存" value={form.stock} onChange={handleChange} required />
-        <button type="submit">{editingId ? "更新商品" : "新增商品"}</button>
+        <button type="submit">{editingId ? "💾 更新商品" : "➕ 新增商品"}</button>
       </form>
 
-      <h3>商品列表</h3>
-      <table border="1" cellPadding="5">
-        <thead>
-          <tr>
-            <th>名稱</th>
-            <th>描述</th>
-            <th>價格</th>
-            <th>庫存</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* 這裡加入 Array.isArray 的判斷，確保 products 是個陣列才執行渲染 */}
-            {Array.isArray(products) ? (
-                products.map((product) => (
-                    // ProductManager.js 裡面的表格部分
-                    <tr key={product._id || product.id}>
-                        <td>{product.name}</td>
-                        <td>{product.description}</td>
-                        <td>{product.price}</td>
-                        <td>{product.stock}</td> {/* 這裡要改成 stock 才能對應到你傳的資料 */}
-                        <td>
-                        {/* 這裡建議加上刪除按鈕測試 CRUD */}
-                            <button onClick={() => handleEdit(product)}>編輯</button>
-                            <button onClick={() => handleDelete(product._id)}>刪除</button>
-                        </td>
-                    </tr>
-                ))
-            ) : (
-                <tr><td colSpan="5">正在載入商品或目前無資料...</td></tr>
-            )}
-        </tbody>
-      </table>
+      <div className="table-container">
+        <table>
+          <thead>
+            <tr><th>名稱</th><th>描述</th><th>價格</th><th>庫存</th><th>操作</th></tr>
+          </thead>
+          <tbody>
+            {products.map((product) => (
+              <tr key={product._id}>
+                <td><strong>{product.name}</strong></td>
+                <td>{product.description}</td>
+                <td>${product.price}</td>
+                <td>{product.stock}</td>
+                <td>
+                  <button className="btn-edit" onClick={() => handleEdit(product)}>編輯</button>
+                  <button className="btn-delete" onClick={() => handleDelete(product._id)}>刪除</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

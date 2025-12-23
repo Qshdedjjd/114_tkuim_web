@@ -1,38 +1,108 @@
-.App {
-  text-align: center;
+/* src/App.css */
+.container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #e4e788;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+h2, h3 { color: #5c99d5; border-bottom: 2px solid #3498db; padding-bottom: 8px; }
+
+/* 表單美化 */
+.product-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  background: rgb(151, 120, 228);
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 30px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.product-form input {
+  padding: 12px;
+  border: 1px solid #dc1313;
+  border-radius: 6px;
+  font-size: 14px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+.product-form button {
+  grid-column: span 2;
+  padding: 12px;
+  background-color: #3498db;
   color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
 }
 
-.App-link {
-  color: #61dafb;
+.product-form button:hover { background-color: #2980b9; }
+
+/* 表格美化 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  overflow: hidden;
+  border-radius: 8px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+th { background-color: #3498db; color: white; padding: 15px; text-align: left; }
+
+td { padding: 12px 15px; border-bottom: 1px solid #eee; }
+
+tr:hover { background-color: #f1f7fd; }
+
+/* 按鈕樣式 */
+.btn-edit { background: #f1c40f; color: white; border: none; padding: 6px 12px; border-radius: 4px; margin-right: 5px; cursor: pointer; }
+.btn-delete { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+
+/* 修改整個網頁背景 */
+body {
+  background-color: #a7bbd7; /* 淺灰色，看起來比較舒適 */
+  margin: 0;
+  padding: 0;
+}
+
+/* 或者你想要更有質感的漸層色 */
+/*
+body {
+  background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+  min-height: 100vh;
+}
+*/
+/* --- 響應式設計 (RWD) 加分區 --- */
+
+/* 當螢幕寬度小於 768px (手機/平板) 時觸發 */
+@media (max-width: 768px) {
+  .container {
+    margin: 10px; /* 縮小外邊距 */
+    padding: 15px;
+    width: auto;
   }
-  to {
-    transform: rotate(360deg);
+
+  .product-form {
+    grid-template-columns: 1fr; /* 表單從兩欄變為一欄 */
+    gap: 10px;
+  }
+
+  .product-form button {
+    grid-column: span 1; /* 按鈕寬度跟著調整 */
+  }
+
+  /* 讓表格在小螢幕上可以橫向滑動，避免破版 */
+  .table-container {
+    overflow-x: auto;
+    display: block;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    text-align: center;
   }
 }

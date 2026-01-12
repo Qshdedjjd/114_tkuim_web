@@ -1,154 +1,142 @@
-:root {
-  --primary: #4f46e5;     /* 靛藍主色 */
-  --bg: #f8fafc;          /* 灰白背景 */
-  --card: #ffffff;        /* 純白卡片 */
-  --text: #1e293b;        /* 深灰文字 */
-  --accent: #10b981;      /* 成功綠 */
-  --danger: #ef4444;      /* 警告紅 */
+/* --- 1. 核心顏色變數 --- */
+/* 淺色模式 */
+.light-theme {
+  --bg-color: #f8fafc;
+  --sidebar-bg: #0f172a;
+  --text-main: #81a6e7; /* 深色字 */
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
 }
 
-body {
-  background-color: var(--bg);
-  color: var(--text);
-  margin: 0;
-  font-family: 'Inter', -apple-system, sans-serif;
+/* 深色模式 */
+.dark-theme {
+  --bg-color: #0f172a;
+  --sidebar-bg: #1e293b;
+  --text-main: #f1f5f9; /* 淺色字 */
+  --text-muted: #94a3b8;
+  --border-color: #334155;
 }
 
-/* 讓畫面分為左側導航與右側內容 */
-.container {
-  display: flex;
-  min-height: 100vh;
-  max-width: 100%; /* 填滿螢幕 */
+/* --- 2. 基礎佈局 --- */
+html, body {
   margin: 0;
   padding: 0;
-  background-color: var(--bg);
-  box-shadow: none;
+  /* 🔹 關鍵：確保 body 背景與深色模式底色一致，防止溢出顯示白色 */
+  background-color: #0f172a; 
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
 }
 
-/* 模擬側邊欄 (加分題：你可以在 HTML 補上這個 div) */
+.container {
+  min-height: 100vh;
+  display: flex;
+  background-color: var(--bg-color);
+  margin: 0;
+  padding: 0;
+  /* 🔹 確保容器在內容不足時也能撐開 100% 高度 */
+  align-items: stretch; 
+}
+
+.main-content {
+  flex: 1;
+  background-color: var(--bg-color);
+  min-height: 100vh;
+  padding: 40px;
+  display: flex;         /* 保持您的 flex 設定 */
+  flex-direction: column;
+  align-items: center;   /* 讓內容水平置中 */
+  box-sizing: border-box;
+}
+
+/* --- 3. 側邊欄 (鎖定寬度解決字被吃掉) --- */
 .sidebar {
   width: 240px;
-  background-color: #0f172a;
-  color: white;
+  min-width: 240px;               /* 鎖定寬度防止文字被壓縮 */
+  background-color: var(--sidebar-bg);
   padding: 30px 20px;
   display: flex;
   flex-direction: column;
+  border-right: 1px solid var(--border-color);
+  box-sizing: border-box;
 }
 
-/* 右側主區域 */
-.main-content {
-  flex: 1;
-  padding: 40px;
-  background-color: #f8fafc;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* 讓內容置中 */
+.sidebar-logo {
+  color: #6366f1;
+  font-weight: 800;
+  margin-bottom: 30px;
+  font-size: 20px;
 }
 
-/* 讓表單和表格容器寬度一致 */
-.product-form, .table-container {
-  width: 100%;
-  max-width: 800px; /* 限制最大寬度，避免在大螢幕太扁 */
-}
-
-.tab-content {
-  background: white;
-  padding: 40px;
-  border-radius: 12px;
-  width: 100%;
-  max-width: 800px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  text-align: center;
-}
-
-/* 確保 sidebar-item 點擊時的視覺回饋 */
-.sidebar-item:active {
-  transform: scale(0.95);
-}
-
-/* --- 側邊欄按鈕：移除預設框框 (修正 image_c0b8bd.png) --- */
 .sidebar-item {
-  background: transparent;  /* 移除預設灰色背景 */
-  border: none;             /* 移除預設黑框 */
-  color: #94a3b8;           /* 預設文字顏色 */
+  background: transparent;
+  border: none;
+  color: #94a3b8;                /* 側邊欄文字預設灰 */
   padding: 12px 15px;
-  width: 100%;              /* 讓按鈕填滿側邊欄寬度 */
-  text-align: left;         /* 文字靠左對齊 */
+  text-align: left;
   font-size: 16px;
   cursor: pointer;
-  display: flex;            /* 讓圖示與文字排成一列 */
-  align-items: center;
-  gap: 10px;
-  transition: all 0.2s ease;
-}
-
-/* 滑鼠移上去的視覺效果 */
-.sidebar-item:hover {
-  background-color: rgba(255, 255, 255, 0.05); /* 極淺的透明白 */
-  color: white;
-}
-
-/* 當前選中分頁的樣式 */
-.sidebar-item.active {
-  background-color: rgba(99, 102, 241, 0.1); /* 淡淡的紫色背景 */
-  color: #6366f1; /* 亮紫色文字 */
-  font-weight: 700;
-}
-
-/* 移除點擊時出現的藍色輪廓線 */
-.sidebar-item:focus {
-  outline: none;
-}
-
-/* 標題區塊 */
-h2 {
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 30px;
-  color: #0f172a;
   display: flex;
   align-items: center;
-  gap: 10px;
-}
-
-/* 表單卡片化 */
-.product-form {
-  background: var(--card);
-  padding: 30px;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-  gap: 20px;
-  margin-bottom: 40px;
-  /* 確保內容不超出 */
-  box-sizing: border-box; 
-  width: 100%;
-}
-
-.product-form input {
-  background: #f1f5f9;
-  width: 100%;
-  box-sizing: border-box; /* 關鍵：讓 padding 不會增加寬度 */
-  border: 1px solid transparent;
-  padding: 12px 16px;
+  gap: 12px;
   border-radius: 8px;
-  transition: all 0.2s;
+  margin-bottom: 5px;
+  white-space: nowrap;           /* ✅ 強制文字不換行 */
 }
 
-.product-form input:focus {
-  background: white;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
-  outline: none;
+.sidebar-item.active {
+  background-color: rgba(99, 102, 241, 0.2);
+  color: #818cf8;
+  font-weight: 700;
 }
 
-/* 表格現代化 */
-.table-container {
-  background: var(--card);
+.theme-toggle-btn {
+  margin-top: auto;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
+  color: #ffffff;                /* 按鈕文字一律白色 */
+  padding: 12px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* --- 4. 主內容區與表格 --- */
+/* ✅ 確保主內容區的所有標題在深色模式下變成純白 */
+.main-content h2 {
+  color: var(--text-main) !important; 
+  font-size: 26px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0; /* 配合 flex 佈局 */
+}
+
+/* 如果數據中心也有用到 h2 */
+.data-center h2 {
+  color: var(--text-main);
+}
+
+/* 修改原本的 .product-form 區塊 */
+.product-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* 強制分為兩欄 */
+  gap: 15px;
+  width: 100%;
+  max-width: 900px;
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--border-color);
   border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  overflow: hidden;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-sizing: border-box;
+}
+
+/* 讓圖片上傳與提交按鈕橫跨整排 */
+.file-input-wrapper, 
+.product-form button[type="submit"] {
+  grid-column: 1 / -1; 
 }
 
 table {
@@ -157,119 +145,210 @@ table {
 }
 
 th {
-  background: #f8fafc;
+  background-color: var(--table-header);
+  color: var(--text-muted);      /* 表頭用灰色輔助 */
   padding: 16px;
+  text-align: left;
   font-size: 13px;
-  font-weight: 600;
-  color: #64748b;
   text-transform: uppercase;
-  border-bottom: 1px solid #e2e8f0;
 }
 
 td {
   padding: 16px;
-  border-bottom: 1px solid #f1f5f9;
-  font-size: 14px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-main) !important; /* ✅ 強制確保內容字體顏色正確 */
+  font-weight: 500;
 }
 
-tr:hover td {
-  background-color: #f8fafc;
-}
-
-/* 按鈕微交互 */
-button {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
+.product-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
   border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+/* --- 5. 搜尋列與操作區 (電腦與手機通用) --- */
+.action-bar {
+  display: flex;
+  align-items: center; /* 垂直置中 */
+  gap: 12px;
+  width: 100%;
+  max-width: 900px;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  flex: 1; /* 自動佔滿剩餘空間 */
+  height: 45px;
+}
+
+.category-filter {
+  width: 160px; /* 給予分類篩選器固定寬度 */
+  height: 45px;
+  flex-shrink: 0;
+}
+
+/* ✅ 強化按鈕顏色：確保電腦版也能看到實心顏色 */
+/* 修改編輯與刪除按鈕 */
+.btn-edit, .btn-delete {
+  width: 70px;            /* ✅ 設定固定寬度，確保按鈕整齊 */
+  height: 36px;           /* ✅ 設定固定高度 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 5px;     /* 按鈕之間的垂直間距 */
+  transition: all 0.2s;
+}
+
+.btn-edit {
+  background-color: #30506d !important;
+  color: white !important;
+}
+
+.btn-delete {
+  background-color: #928484 !important;
+  color: white !important;
+}
+
+/* 登出按鈕樣式 */
+.btn-logout {
+  background-color: #f1f5f9;
+  color: #0f172a;
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-logout:hover {
+  background-color: #ef4444;
+  color: white;
+  border-color: #ef4444;
+}
+
+/* 確保頂部標題列寬度正確 */
+.main-content > div:first-child {
+  width: 100%;
+  max-width: 900px;
+}
+
+/* ✅ 庫存與標籤樣式 (移出媒體查詢) */
+.stock-number.danger {
+  color: #cf1322 !important;
+  font-weight: 800;
+}
+
+/* ✅ 強化後的狀態標籤樣式 */
+.badge {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 800;        /* ✅ 字體加到最粗 */
+  display: inline-block;
+  text-align: center;
+  min-width: 60px;
+}
+
+/* 充足：深綠字 + 淺綠底 + 綠邊框 */
+.badge-instock {
+  background-color: #f6ffed !important;
+  color: #237804 !important;    /* ✅ 使用更深的森林綠 */
+  border: 1px solid #b7eb8f !important;
+}
+
+/* 需補貨：深紅字 + 淺紅底 + 紅邊框 */
+.badge-low {
+  background-color: #fff1f0 !important;
+  color: #a8071a !important;    /* ✅ 使用更深的血紅色 */
+  border: 1px solid #ffccc7 !important;
+}
+
+/* 已售罄：深灰字 + 灰底 + 灰邊框 */
+.badge-soldout {
+  background-color: #f5f5f5 !important;
+  color: #595959 !important;
+  border: 1px solid #d9d9d9 !important;
+}
+
+/* --- 6. 純手機版特定優化 --- */
+@media (max-width: 768px) {
+  .container { flex-direction: column; }
+  .sidebar {
+    width: 100%;
+    min-width: 100%;
+    flex-direction: row;
+    padding: 10px;
+    height: auto;
+  }
+  .sidebar-logo { display: none; }
+  .main-content { padding: 20px; }
+  .action-bar { flex-direction: column; align-items: stretch; }
+}
+
+/* ✅ 統一表單與篩選器的下拉選單樣式 */
+.category-select, .category-filter {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background-color: var(--input-bg);
+  color: var(--text-main);
+  font-size: 14px;
+  cursor: pointer;
+  outline: none;
+  width: 100%; /* 表單內撐滿 */
+}
+
+/* 針對搜尋列旁邊的篩選器縮小寬度 */
+.category-filter {
+  width: auto;
+  min-width: 140px;
+  height: 45px; /* 與搜尋框高度一致 */
+}
+
+/* ✅ 優化商品名稱下方的分類標籤 */
+.category-tag {
+  display: inline-block;
+  font-size: 11px;
+  background-color: rgba(99, 102, 241, 0.15); /* 淡淡的紫色底 */
+  color: #818cf8; /* 亮紫色文字 */
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-top: 4px;
   font-weight: 600;
 }
 
-button:hover {
-  transform: translateY(-1px);
-}
-
-.btn-edit { background: #e0e7ff; color: var(--primary); border: none; padding: 6px 12px; }
-.btn-delete { background: #fee2e2; color: var(--danger); border: none; padding: 6px 12px; }
-
-.stats-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-top: 20px;
+/* 讓表格列更有空間感 */
+td {
+  padding: 20px 16px;
 }
 
 .stat-card {
-  background: #f1f5f9;
   padding: 20px;
+  background: var(--sidebar-bg);
   border-radius: 12px;
-  text-align: center;
+  border: 1px solid var(--border-color);
+  transition: transform 0.2s;
 }
 
-.stat-card h3 {
-  font-size: 14px;
-  color: #64748b;
-  margin: 0;
+.stat-card h4 {
+  color: var(--text-muted);
+  margin: 0 0 10px 0;
 }
 
+/* 確保統計數據文字在深色模式下是白的 */
 .stat-card p {
-  font-size: 24px;
-  font-weight: 800;
-  color: #4f46e5;
-  margin: 10px 0 0 0;
+  color: var(--text-main);
 }
 
-/* --- 響應式手機版佈局優化 --- */
-@media (max-width: 768px) {
-  /* 1. 讓整體改為上下排列，解決內容被切掉的問題 */
-  .container {
-    flex-direction: column; /* 將橫向排列改為垂直排列 */
-  }
-
-  /* 2. 側邊欄改為上方導覽列 */
-  .sidebar {
-    width: 100%; /* 手機版撐滿寬度 */
-    height: auto;
-    padding: 10px 15px;
-    flex-direction: row; /* 按鈕左右並排 */
-    justify-content: space-around;
-    box-sizing: border-box;
-  }
-
-  .sidebar h3 {
-    display: none; /* 手機版隱藏 Logo 節省空間 */
-  }
-
-  .sidebar-item {
-    font-size: 14px;
-    padding: 8px;
-    justify-content: center;
-  }
-
-  /* 3. 內容區塊自動縮放 */
-  .main-content {
-    padding: 20px 15px; /* 縮小邊距 */
-    width: 100%;
-    box-sizing: border-box; /* 確保 padding 不會撐破畫面 */
-  }
-
-  /* 4. 表單改為單欄，避免填格超出卡片 */
-  .product-form {
-    grid-template-columns: 1fr !important; /* 強制所有輸入框各佔一行 */
-    padding: 20px;
-  }
-
-  /* 5. 表格容器開啟滑動功能 */
-  .table-container {
-    overflow-x: auto; /* 讓表格可以在窄螢幕左右滑動，不會卡死 */
-    -webkit-overflow-scrolling: touch;
-  }
-
-  table {
-    min-width: 600px; /* 鎖定表格寬度，避免文字擠壓成一團 */
-  }
-
-  /* 6. 統計卡片改為單欄 */
-  .stats-container {
-    grid-template-columns: 1fr;
-  }
+.stat-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  border-color: #6366f1;
 }

@@ -43,7 +43,7 @@ function ProductManager() {
 
   useEffect(() => { fetchProducts(); }, []);
 
-  // ✅ 過濾邏輯
+  //  過濾邏輯
   const filteredProducts = products.filter(p => {
     const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = filterCategory === "全部" || p.category === filterCategory;
@@ -112,7 +112,7 @@ function ProductManager() {
       try {
         await axios.delete(`${API_URL}/${id}`, config);
         fetchProducts();
-        setAlert({ show: true, message: "🗑️ 商品已成功刪除", type: "danger" });
+        setAlert({ show: true, message: " 商品已成功刪除", type: "danger" });
       } catch (err) { setAlert({ show: true, message: "刪除失敗", type: "danger" }); }
     }
   };
@@ -143,10 +143,10 @@ function ProductManager() {
       if (editingId) {
         await axios.put(`${API_URL}/${editingId}`, formData, config);
         setEditingId(null);
-        setAlert({ show: true, message: "✅ 商品更新成功！", type: "success" });
+        setAlert({ show: true, message: " 商品更新成功！", type: "success" });
       } else {
         await axios.post(API_URL, formData, config);
-        setAlert({ show: true, message: "✅ 商品新增成功！", type: "success" });
+        setAlert({ show: true, message: " 商品新增成功！", type: "success" });
       }
       setForm({ name: "", description: "", price: "", stock: "", category: "未分類" });
       setFile(null); 
@@ -161,15 +161,15 @@ function ProductManager() {
     <div className={isDark ? "dark-theme container" : "light-theme container"}>
       <div className="sidebar">
         <h3 className="sidebar-logo">SELLER CENTER</h3>
-        <button className={`sidebar-item ${activeTab === 'products' ? 'active' : ''}`} onClick={() => setActiveTab('products')}>📦 商品管理</button>
-        <button className={`sidebar-item ${activeTab === 'data' ? 'active' : ''}`} onClick={() => setActiveTab('data')}>📊 數據中心</button>
+        <button className={`sidebar-item ${activeTab === 'products' ? 'active' : ''}`} onClick={() => setActiveTab('products')}> 商品管理</button>
+        <button className={`sidebar-item ${activeTab === 'data' ? 'active' : ''}`} onClick={() => setActiveTab('data')}> 數據中心</button>
         {/* 🔹 新增：買家視角按鈕 */}
       <button className={`sidebar-item ${activeTab === 'shop' ? 'active' : ''}`} 
         onClick={() => setActiveTab('shop')} 
         style={{ color: '#fbbf24', borderColor: '#fbbf24' }}>
-        🛒 買家視角 (前台)
+         買家視角 (前台)
       </button>
-        <button className="theme-toggle-btn" onClick={() => setIsDark(!isDark)}>{isDark ? "☀️ 淺色" : "🌙 深色"}</button>
+        <button className="theme-toggle-btn" onClick={() => setIsDark(!isDark)}>{isDark ? " 淺色" : " 深色"}</button>
       </div>
 
       <div className="main-content">
@@ -179,7 +179,7 @@ function ProductManager() {
 
         {activeTab === 'products' && (
           <>
-            <h2>📦 商品管理控制台</h2>
+            <h2> 商品管理控制台</h2>
             {alert.show && <AlertFactory type={alert.type} message={alert.message} />}
             
             <form onSubmit={handleSubmit} className="product-form">
@@ -188,15 +188,15 @@ function ProductManager() {
               <input name="stock" type="number" placeholder="庫存" value={form.stock} onChange={(e) => setForm({...form, stock: e.target.value})} required />
               
               <select className="category-select" value={form.category} onChange={(e) => setForm({...form, category: e.target.value})}>
-                <option value="未分類">📁 選擇分類</option>
-                <option value="電子產品">💻 電子產品</option>
-                <option value="生活用品">🏠 生活用品</option>
-                <option value="服飾配件">👕 服飾配件</option>
-                <option value="食品飲料">🍎 食品飲料</option>
+                <option value="未分類"> 選擇分類</option>
+                <option value="電子產品"> 電子產品</option>
+                <option value="生活用品"> 生活用品</option>
+                <option value="服飾配件"> 服飾配件</option>
+                <option value="食品飲料"> 食品飲料</option>
               </select>
 
               <div className="file-input-wrapper" style={{ gridColumn: "1 / -1", textAlign: "left", marginTop: "10px" }}>
-                <label style={{ fontSize: "14px", color: "var(--text-muted)" }}>📸 上傳商品圖片：</label>
+                <label style={{ fontSize: "14px", color: "var(--text-muted)" }}> 上傳商品圖片：</label>
                 <input type="file" accept="image/*" onChange={handleFileChange} />
                 {preview && (
                   <div style={{ marginTop: "10px" }}>
@@ -206,18 +206,18 @@ function ProductManager() {
               </div>
 
               <button type="submit" style={{ gridColumn: "1 / -1" }}>
-                {editingId ? "💾 更新商品資訊" : "➕ 新增商品資訊"}
+                {editingId ? " 更新商品資訊" : "➕ 新增商品資訊"}
               </button>
             </form>
 
             <div className="action-bar">
-              <input className="search-input" placeholder="🔍 搜尋商品名稱..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+              <input className="search-input" placeholder=" 搜尋商品名稱..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
               <select className="category-filter" value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)}>
-                <option value="全部">📂 所有分類</option>
-                <option value="電子產品">💻 電子產品</option>
-                <option value="生活用品">🏠 生活用品</option>
-                <option value="服飾配件">👕 服飾配件</option>
-                <option value="食品飲料">🍎 食品飲料</option>
+                <option value="全部"> 所有分類</option>
+                <option value="電子產品"> 電子產品</option>
+                <option value="生活用品"> 生活用品</option>
+                <option value="服飾配件"> 服飾配件</option>
+                <option value="食品飲料"> 食品飲料</option>
               </select>
 
               {selectedIds.length > 0 && (
@@ -225,7 +225,7 @@ function ProductManager() {
               )}
               
               <button onClick={exportToCSV} className="btn-edit" style={{ width: 'auto', padding: '0 15px', backgroundColor: '#10b981' }}>
-                📥 匯出 CSV
+                 匯出 CSV
               </button>
             </div>
 
@@ -269,7 +269,7 @@ function ProductManager() {
                   onClick={() => setCurrentPage(p => p - 1)}
                   style={{ padding: '8px 16px', borderRadius: '6px', cursor: currentPage === 1 ? 'not-allowed' : 'pointer', opacity: currentPage === 1 ? 0.5 : 1 }}
                 >
-                  ◀ 上一頁
+                  上一頁
                 </button>
                 <span style={{ color: 'var(--text-main)', fontWeight: '700' }}>頁次 {currentPage} / {totalPages || 1}</span>
                 <button 
@@ -277,7 +277,7 @@ function ProductManager() {
                   onClick={() => setCurrentPage(p => p + 1)}
                   style={{ padding: '8px 16px', borderRadius: '6px', cursor: (currentPage === totalPages || totalPages === 0) ? 'not-allowed' : 'pointer', opacity: (currentPage === totalPages || totalPages === 0) ? 0.5 : 1 }}
                 >
-                  下一頁 ▶
+                  下一頁 
                 </button>
               </div>
             </div>
@@ -286,13 +286,13 @@ function ProductManager() {
 
         {activeTab === 'data' && (
   <div className="data-center" style={{ width: '100%', maxWidth: '900px' }}>
-    <h2 style={{ marginBottom: '30px' }}>📊 營運數據</h2>
+    <h2 style={{ marginBottom: '30px' }}> 營運數據</h2>
     
     <div className="stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
       
-      {/* 🚀 亮點一：商品分類比例圖 */}
+      {/*  亮點一：商品分類比例圖 */}
       <div className="stat-card" style={{ gridColumn: '1 / -1', minHeight: '400px' }}>
-        <h4 style={{ color: 'var(--text-muted)', marginBottom: '20px' }}>📦 商品分類佔比分析</h4>
+        <h4 style={{ color: 'var(--text-muted)', marginBottom: '20px' }}> 商品分類佔比分析</h4>
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
             <Pie
@@ -319,7 +319,7 @@ function ProductManager() {
         </ResponsiveContainer>
       </div>
 
-      {/* 🚀 亮點二：庫存預警名單 */}
+      {/*  亮點二：庫存預警名單 */}
       <div className="stat-card" style={{ gridColumn: '1 / -1' }}>
         <h4 style={{ color: '#ef4444', marginBottom: '15px', display: 'flex', alignItems: 'center', gap: '10px' }}>
           ⚠️ 庫存低於安全水位 (5件以下)
@@ -345,7 +345,7 @@ function ProductManager() {
               ) : (
                 <tr>
                   <td colSpan="3" style={{ padding: '30px', textAlign: 'center', color: '#10b981', fontWeight: '600' }}>
-                    ✨ 太棒了！目前所有商品庫存皆在安全範圍。
+                     太棒了！目前所有商品庫存皆在安全範圍。
                   </td>
                 </tr>
               )}
@@ -360,7 +360,7 @@ function ProductManager() {
 {/* --- 區塊 3：買家視角 (修正位置) --- */}
         {activeTab === 'shop' && (
           <div className="shop-container" style={{ width: '100%', maxWidth: '1100px', paddingBottom: '50px' }}>
-            <h2 style={{ marginBottom: '30px', textAlign: 'center' }}>🌟 精選商品展示 (前台預覽)</h2>
+            <h2 style={{ marginBottom: '30px', textAlign: 'center' }}> 精選商品展示 (前台預覽)</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '25px' }}>
               {products.map(p => (
                 <div key={p._id} className="stat-card" style={{ 
@@ -370,7 +370,7 @@ function ProductManager() {
                     display: 'flex',
                     flexDirection: 'column',
                     transition: 'transform 0.3s ease',
-                    // ✨ 修正點：使用變數確保背景隨主題切換
+                    //  修正點：使用變數確保背景隨主題切換
                     backgroundColor: 'var(--sidebar-bg)', 
                     border: '1px solid var(--border-color)' 
                   }}>
@@ -389,7 +389,7 @@ function ProductManager() {
                     <h3 style={{ 
                       margin: '8px 0', 
                       fontSize: '18px', 
-                      // ✨ 修正點：確保文字在淺色模式變深，深色模式變淺
+                      //  修正點：確保文字在淺色模式變深，深色模式變淺
                       color: 'var(--text-main)' 
                     }}>
                       {p.name}
